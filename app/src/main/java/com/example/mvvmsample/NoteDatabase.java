@@ -9,16 +9,16 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-@Database(entities = {Note.class}, version = 1)   //app eke vertion number eka up karana kota methanin up karanna puluwan
+@Database(entities = {Note.class}, version = 1)   //if we want up app version number there can do that
 public abstract class NoteDatabase extends RoomDatabase {
 
     private static NoteDatabase instance;
 
     public abstract NoteDao noteDao();
 
-    //synchronized walin ekapara access karanna denne ekkenekuta witharai
+    //one can synchronized access same time
     public static synchronized NoteDatabase getInstance(Context context){
-        if(instance == null) // kalin ekak thiyanawada balanawa
+        if(instance == null) // check is assign previous
         {
             instance = Room.databaseBuilder(context.getApplicationContext(),//
                     NoteDatabase.class,"note_database")
@@ -27,7 +27,7 @@ public abstract class NoteDatabase extends RoomDatabase {
                     .build();
 
         }
-// --------------------------------------------------------  instance eka hadagannawa
+// --------------------------------------------------------  instance create
         return instance;
     }
 
@@ -36,14 +36,14 @@ public abstract class NoteDatabase extends RoomDatabase {
         public void onCreate(@NonNull SupportSQLiteDatabase db) {
             super.onCreate(db);
 
-            //----------------------------------------------------  hadagaththa instance eka execute karanawa
+            //---------------------------------------------------- execute created instance
             new PopulateDbAsyncTask(instance).execute();
         }
     };
 
     private static class PopulateDbAsyncTask extends AsyncTask<Void, Void, Void>{
         private NoteDao noteDao;
-//---------------------------------------------------------------------  execute kala eka populate karanawa
+//--------------------------------------------------------------------- populate executed one
         private PopulateDbAsyncTask(NoteDatabase db){
             noteDao = db.noteDao();
         }
